@@ -3,10 +3,10 @@
 ## Executive Summary
 
 ### Core Value Proposition
-The SchoolKit platform empowers public school teachers in Lebanon by providing structured lesson plans, real-time AI assistance, and classroom tools, enabling them to independently deliver high-quality Computer Science education.
+The SchoolKit platform empowers public school teachers in Lebanon by providing providing structured lesson plans, real-time AI assistance, classroom tools, and integrated data tracking (including assessment data synced from existing tools such as Google Forms), enabling them to independently deliver high-quality Computer Science education.
 
 ### MVP Scope
-The MVP includes AI-powered chatbot support, lesson adaptation tools, attendance tracking, and automated dashboards. These features focus on enhancing teacher autonomy, reducing reliance on external support, and improving student learning outcomes.
+The MVP includes AI-powered chatbot support, lesson adaptation tools, a learning centre with structured resources, attendance and assessment tracking (including Google Forms integration), and automated dashboards.
 
 ### Success Criteria
 - **Feature Completion:** All P0 features from PRD implemented and tested
@@ -34,10 +34,13 @@ The MVP includes AI-powered chatbot support, lesson adaptation tools, attendance
 #### Entity Relationship Diagram (Text)
 ```
 [User] 1──────M [LessonPlan]
-    │                 │
-    │                 │
-    M                 1
-[Class] ──────── [Attendance]
+    │
+    │
+    M
+[Class] 1──────M [Attendance]
+    │
+    │
+    1──────M [Assessment]
 ```
 
 #### Core Entities
@@ -61,6 +64,11 @@ The MVP includes AI-powered chatbot support, lesson adaptation tools, attendance
   - Fields: id (uuid), date (date), status (enum: present/absent), studentName (string), classId (uuid), createdAt (timestamp), updatedAt (timestamp)
   - Relationships: belongs_to Class
   - Indexes: date for reporting
+
+- **Assessment**
+  - Fields: id (uuid), studentName (string), score (float), submissionDate (timestamp), source (enum: google_form/manual), classId (uuid)
+  - Relationships: belongs_to Class
+  - Indexes: submissionDate for reporting
 
 ### API Routes / Endpoints
 
@@ -86,8 +94,15 @@ The MVP includes AI-powered chatbot support, lesson adaptation tools, attendance
 - `PUT /api/attendance/:id` - Update attendance record
 - `DELETE /api/attendance/:id` - Delete attendance record
 
+**Assessment Routes:**
+
+- `GET /api/assessments` - List assessment data with filters
+- `GET /api/assessments/:classId` - Get assessment data for a specific class
+- `POST /api/assessments/import` - Import assessment data from Google Forms
+- `POST /api/assessments/manual` - Manually input assessment data
+
 #### Webhook Routes (if applicable)
-- `POST /api/webhooks/external-service` - Handle external service webhooks
+- `POST /api/webhooks/google-forms` - Receive and process assessment submissions from Google Forms
 
 ## User Stories
 
@@ -119,15 +134,18 @@ The MVP includes AI-powered chatbot support, lesson adaptation tools, attendance
 
 **Estimated Complexity:** Medium
 
-### User Story 3: Attendance Tracking
-**Story:** As a teacher, I want to track attendance easily so that I can maintain accurate records.
+### User Story 3: Attendance & Assessment Tracking
+- **Description:** Enables teachers to track attendance and automatically sync assessment data from Google Forms used for student evaluations.
+- **Story:** "As a teacher, I want attendance and assessment data to be captured easily and automatically so that I can maintain accurate records without additional admin work."
 
-**Priority:** P1
+**Priority:** P0
 
-**Acceptance Criteria:**
-- [ ] Attendance can be marked in under 1 minute per class
-- [ ] Supports both manual entry and file uploads
-- [ ] Provides daily and weekly attendance summaries
+- **Acceptance Criteria:** 
+  1. Attendance can be marked in under 1 minute per class
+  2. Supports both manual entry and file uploads for attendance
+  3. Assessment data automatically syncs from Google Forms
+  4. Assessment results are linked to individual students and classes
+  5. Data feeds directly into dashboards without manual processing
 
 **Dependencies:** Class Management
 
