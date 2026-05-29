@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Schoolkit
 
-## Getting Started
+---
 
-First, run the development server:
+This vision document is crafted to inspire action and commitment, guiding SchoolKit's development towards creating lasting educational impact.
+
+## Features
+
+- Description: Provides real-time support for lesson adaptation, answers questions, and assists with troubleshooting.
+- User Story: "As a teacher, I want to receive instant support and guidance so that I can deliver lessons effectively without delays."
+- Acceptance Criteria:
+- Priority: P0
+
+## Tech Stack
+
+- **Framework**: Next.js
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- [Claude Code CLI](https://claude.ai/claude-code) (for Ralph autonomous development)
+- [GitHub CLI](https://cli.github.com/) (for Ralph issue integration)
+
+### Installation
+
+```bash
+git clone <your-repo-url>
+cd schoolkit
+npm install
+```
+
+### Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Build
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Getting Started with Ralph 🤖
 
-## Learn More
+This project includes **Ralph**, an autonomous AI development loop that implements features from GitHub issues.
 
-To learn more about Next.js, take a look at the following resources:
+### Workflow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Choose an issue** from the [project board](../../projects)
+2. **Generate Ralph files**: `/ralphify <issue-number>`
+3. **Run the loop**: `.ralph/ralph.sh 20`
+4. **Clean up when done**: `/ralph-cleanup`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Commands
 
-## Deploy on Vercel
+| Command | Description |
+|---------|-------------|
+| `/ralphify #123` | Generate `.ralph/` files for issue #123 |
+| `.ralph/ralph.sh 20` | Run Ralph loop (max 20 iterations) |
+| `/ralph-cleanup` | Archive files and close the GitHub issue |
+| `/ralph-cleanup --force` | Archive even if tasks incomplete |
+| `/ralph-cleanup --no-close` | Archive but don't close issue |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Example Session
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# 1. Pick an issue and generate Ralph files
+claude
+> /ralphify 42
+
+# 2. Run the autonomous loop
+.ralph/ralph.sh 20
+
+# 3. Archive and close the issue
+claude
+> /ralph-cleanup
+```
+
+### How Ralph Works
+
+Ralph reads the generated `.ralph/plan.md` file which contains a JSON task list derived from the GitHub issue. Each iteration:
+
+1. Reads the plan to find an incomplete task
+2. Implements the task completely
+3. Updates `plan.md` (marks task as passed)
+4. Logs progress to `activity.md`
+5. Verifies with build/tests
+6. Continues until all tasks pass or max iterations reached
+
+When complete, `/ralph-cleanup` archives the session to `.ralph/archive/issue-<number>/` and closes the GitHub issue.
+
+See `.claude/commands/` for full command documentation.
+
+## Documentation
+
+- [Product Requirements](./confabulator/PRD.md)
+- [Project Vision](./confabulator/project-vision.md)
+- [Implementation Plan](./confabulator/implementation-plan.md)
+- [Business Model Canvas](./confabulator/business-model-canvas.md)
+- [PR-FAQ](./confabulator/PR-FAQ.md)
+
+---
+
+*Generated with [Confabulator](https://vibecodelisboa.com/confabulator)*
